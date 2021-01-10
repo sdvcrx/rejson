@@ -1,0 +1,8 @@
+kind: pipeline
+name: default
+
+- name: test
+  image: golang
+  commands:
+  - go version
+  - go test -v
