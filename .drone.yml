@@ -12,3 +12,4 @@ steps:
   commands:
   - go version
   - go test -v
+  - go test -bench=.
