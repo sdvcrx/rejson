@@ -85,7 +85,7 @@ func setFieldBool(field reflect.Value, val gjson.Result) {
 	}
 }
 
-func setFieldJSON(field reflect.Value, val gjson.Result) {
+func setFieldObject(field reflect.Value, val gjson.Result) {
 	var v reflect.Value
 	if field.Type().Kind() == reflect.Ptr {
 		v = reflect.New(field.Type().Elem())
@@ -105,6 +105,25 @@ func setFieldJSON(field reflect.Value, val gjson.Result) {
 	}
 }
 
+func setFieldArray(field reflect.Value, val gjson.Result) {
+	arr := val.Array()
+	arrLength := len(arr)
+
+	var arrVal reflect.Value
+	if field.Type().Kind() == reflect.Ptr {
+		arrVal = reflect.MakeSlice(field.Type().Elem(), arrLength, arrLength)
+	} else {
+		arrVal = reflect.MakeSlice(field.Type(), arrLength, arrLength)
+	}
+
+	for i := 0; i < arrLength; i++ {
+		v := arr[i]
+
+		setFieldObject(arrVal.Index(i), v)
+	}
+	field.Set(arrVal)
+}
+
 func setField(field reflect.Value, val gjson.Result) {
 	if field.CanSet() {
 		switch val.Type {
@@ -119,7 +138,15 @@ func setField(field reflect.Value, val gjson.Result) {
 		case gjson.True:
 			setFieldBool(field, val)
 		case gjson.JSON:
-			setFieldJSON(field, val)
+			if val.IsObject() {
+				setFieldObject(field, val)
+			} else if val.IsArray() {
+				setFieldArray(field, val)
+			} else {
+				// TODO unknown JSON value
+				// should not run to here
+				log.Printf("Unknown json value: %+v", val)
+			}
 		}
 	} else {
 		log.Printf("%+v cannot be setted", field)

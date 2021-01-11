@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	testUserJSON     = `{"first_name":"John","last_name":"Do","age":18}`
-	testUserNestJSON = `{"code":0,"msg": null,"data":{"name":"John"}}`
+	testUserJSON      = `{"first_name":"John","last_name":"Do","age":18}`
+	testUserNestJSON  = `{"code":0,"msg": null,"data":{"name":"John"}}`
+	testUserArrayJSON = `{"code":0,"msg":"ok","users":[{"name":"Han"},{"name":"Alex"}]}`
 )
 
 type user struct {
@@ -58,4 +59,21 @@ func TestUnmarshalJSONNest(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, resp2.Data)
 	assert.Equal(t, "John", resp2.Data.Name)
+}
+
+func TestUnmarshalJSONArray(t *testing.T) {
+	type user struct {
+		Name string `jsonp:"name"`
+	}
+	type response struct {
+		Code  int    `jsonp:"code"`
+		Msg   string `jsonp:"msg"`
+		Users []user `jsonp:"users"`
+	}
+
+	resp := &response{}
+	err := Unmarshal(testUserArrayJSON, resp)
+	assert.NoError(t, err)
+	assert.NotNil(t, resp.Users)
+	assert.Len(t, resp.Users, 2)
 }
