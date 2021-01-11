@@ -13,7 +13,7 @@ type unmarshal struct {
 	r gjson.Result
 }
 
-func NewConverter(jsonString string) *unmarshal {
+func newUnmarshal(jsonString string) *unmarshal {
 	return &unmarshal{
 		r: gjson.Parse(jsonString),
 	}
@@ -66,7 +66,7 @@ func callFunc(r gjson.Result, funcName string, structValue reflect.Value) {
 			reflect.ValueOf(&r),
 		})
 	}
-	return
+	// TODO print error log and return error
 }
 
 func setFieldStringOrNumber(field reflect.Value, val gjson.Result) {
@@ -128,4 +128,9 @@ func setField(field reflect.Value, val gjson.Result) {
 
 func (u *unmarshal) Unmarshal(v interface{}) error {
 	return unmarshalResult(u.r, v)
+}
+
+func Unmarshal(jsonString string, v interface{}) error {
+	u := newUnmarshal(jsonString)
+	return u.Unmarshal(v)
 }

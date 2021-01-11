@@ -2,6 +2,11 @@ kind: pipeline
 name: default
 
 steps:
+- name: lint
+  image: golangci/golangci-lint
+  commands:
+  - golangci-lint run --timeout 3m
+
 - name: test
   image: golang
   commands:

@@ -25,20 +25,15 @@ func (usr *user) ParseFullName(jsonReader *gjson.Result) {
 }
 
 func TestUnmarshalJSONSimple(t *testing.T) {
-	c := NewConverter(testUserJSON)
-
 	u := &user{}
-	err := c.Unmarshal(u)
+	err := Unmarshal(testUserJSON, u)
 	assert.NoError(t, err)
-	t.Logf("%+v", u)
 	assert.Equal(t, u.FirstName, "John")
 	assert.Equal(t, u.Age, 18)
 	assert.Equal(t, "John Do", u.FullName)
 }
 
 func TestUnmarshalJSONNest(t *testing.T) {
-	cvt := NewConverter(testUserNestJSON)
-
 	type user struct {
 		Name string `jsonp:"name"`
 	}
@@ -48,7 +43,7 @@ func TestUnmarshalJSONNest(t *testing.T) {
 		Data user   `jsonp:"data"`
 	}
 	resp := &response{}
-	err := cvt.Unmarshal(resp)
+	err := Unmarshal(testUserNestJSON, resp)
 	assert.NoError(t, err)
 	assert.NotNil(t, resp.Data)
 	assert.Equal(t, "John", resp.Data.Name)
@@ -59,7 +54,7 @@ func TestUnmarshalJSONNest(t *testing.T) {
 		Data *user  `jsonp:"data"`
 	}
 	resp2 := &response2{}
-	err = cvt.Unmarshal(resp2)
+	err = Unmarshal(testUserNestJSON, resp2)
 	assert.NoError(t, err)
 	assert.NotNil(t, resp2.Data)
 	assert.Equal(t, "John", resp2.Data.Name)

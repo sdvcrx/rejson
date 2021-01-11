@@ -18,8 +18,6 @@ const (
 type tag struct {
 	Type  string
 	Value string
-
-	ElemTags []tag
 }
 
 func parseTag(t string) (tag, error) {
@@ -35,15 +33,17 @@ func parseTag(t string) (tag, error) {
 	default:
 		t := strings.SplitN(strings.TrimSpace(t), ":", 2)
 		if len(t) == 2 {
+			// "func:FuncName"
 			return tag{
 				Type:  t[0],
 				Value: t[1],
 			}, nil
-		} else {
-			return tag{
-				Type:  tagTypePath,
-				Value: t[0],
-			}, nil
 		}
+
+		// "path"
+		return tag{
+			Type:  tagTypePath,
+			Value: t[0],
+		}, nil
 	}
 }
