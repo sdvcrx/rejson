@@ -20,9 +20,19 @@ type tag struct {
 	Value string
 }
 
-func parseTag(t string) (tag, error) {
-	// var tags []tag
+func splitTag(s string) tag {
+	idx := strings.Index(s, ":")
+	if idx == -1 {
+		return tag{Value: s}
+	}
 
+	return tag{
+		Type:  s[:idx],
+		Value: s[idx+1:],
+	}
+}
+
+func parseTag(t string) (tag, error) {
 	v := strings.TrimSpace(t)
 
 	switch {
@@ -31,19 +41,10 @@ func parseTag(t string) (tag, error) {
 	case v == tagTypeIgnore:
 		return tag{Type: tagTypeIgnore}, nil
 	default:
-		t := strings.SplitN(strings.TrimSpace(t), ":", 2)
-		if len(t) == 2 {
-			// "func:FuncName"
-			return tag{
-				Type:  t[0],
-				Value: t[1],
-			}, nil
+		tg := splitTag(v)
+		if tg.Type == "" {
+			tg.Type = tagTypePath
 		}
-
-		// "path"
-		return tag{
-			Type:  tagTypePath,
-			Value: t[0],
-		}, nil
+		return tg, nil
 	}
 }
