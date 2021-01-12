@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	testUserJSON      = `{"first_name":"John","last_name":"Do","age":18}`
+	testUserJSON      = `{"first_name":"John","last_name":"Do","age":18,"married":false,"graduated":true}`
 	testUserNestJSON  = `{"code":0,"msg": null,"data":{"name":"John"}}`
 	testUserArrayJSON = `{"code":0,"msg":"ok","users":[{"name":"Han"},{"name":"Alex"}]}`
 )
@@ -18,6 +18,8 @@ type user struct {
 	LastName  string `jsonp:"last_name"`
 	FullName  string `jsonp:"func:ParseFullName"`
 	Age       int    `jsonp:"age"`
+	Married   bool   `jsonp:"married"`
+	Graduated bool   `jsonp:"graduated"`
 	Empty     string `jsonp:"-"`
 }
 
@@ -32,6 +34,8 @@ func TestUnmarshalJSONSimple(t *testing.T) {
 	assert.Equal(t, u.FirstName, "John")
 	assert.Equal(t, u.Age, 18)
 	assert.Equal(t, "John Do", u.FullName)
+	assert.Equal(t, false, u.Married)
+	assert.Equal(t, true, u.Graduated)
 }
 
 func TestUnmarshalJSONNest(t *testing.T) {
