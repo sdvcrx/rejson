@@ -93,4 +93,32 @@ func TestUnmarshalJSONArray(t *testing.T) {
 		assert.NotNil(t, resp.Users)
 		assert.Len(t, *resp.Users, 2)
 	})
+
+func TestUnmarshalNumber(t *testing.T) {
+	t.Run("Float64", func(t *testing.T) {
+		resp := struct {
+			Money float64 `jsonp:"money"`
+		}{}
+
+		assert.NoError(t, Unmarshal(`{"money":3.2}`, &resp))
+		assert.Equal(t, 3.2, resp.Money)
+	})
+
+	t.Run("Float32", func(t *testing.T) {
+		resp := struct {
+			Money float32 `jsonp:"money"`
+		}{}
+
+		assert.NoError(t, Unmarshal(`{"money":3.2}`, &resp))
+		assert.Equal(t, float32(3.2), resp.Money)
+	})
+
+	t.Run("Int32", func(t *testing.T) {
+		resp := struct {
+			Money int32 `jsonp:"money"`
+		}{}
+
+		assert.NoError(t, Unmarshal(`{"money":3}`, &resp))
+		assert.Equal(t, int32(3), resp.Money)
+	})
 }

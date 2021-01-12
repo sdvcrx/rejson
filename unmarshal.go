@@ -74,8 +74,12 @@ func setFieldStringOrNumber(field reflect.Value, val gjson.Result) {
 	switch fieldType {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		field.SetInt(val.Int())
+	case reflect.Float32, reflect.Float64:
+		field.SetFloat(val.Float())
 	case reflect.String:
 		field.SetString(val.String())
+	default:
+		log.Fatalf("Unknown fieldType: %+v", fieldType)
 	}
 }
 
