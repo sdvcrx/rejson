@@ -121,7 +121,14 @@ func setFieldArray(field reflect.Value, val gjson.Result) {
 
 		setFieldObject(arrVal.Index(i), v)
 	}
-	field.Set(arrVal)
+	if field.Kind() == reflect.Ptr {
+		// Users *[]user `jsonp:"users"`
+		fieldVal := reflect.New(field.Type().Elem())
+		fieldVal.Elem().Set(arrVal)
+		field.Set(fieldVal)
+	} else {
+		field.Set(arrVal)
+	}
 }
 
 func setField(field reflect.Value, val gjson.Result) {
