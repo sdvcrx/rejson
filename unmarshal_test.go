@@ -42,42 +42,55 @@ func TestUnmarshalJSONNest(t *testing.T) {
 	type user struct {
 		Name string `jsonp:"name"`
 	}
-	type response struct {
-		Code int    `jsonp:"code"`
-		Msg  string `jsonp:"msg"`
-		Data user   `jsonp:"data"`
-	}
-	resp := &response{}
-	err := Unmarshal(testUserNestJSON, resp)
-	assert.NoError(t, err)
-	assert.NotNil(t, resp.Data)
-	assert.Equal(t, "John", resp.Data.Name)
 
-	type response2 struct {
-		Code int    `jsonp:"code"`
-		Msg  string `jsonp:"msg"`
-		Data *user  `jsonp:"data"`
-	}
-	resp2 := &response2{}
-	err = Unmarshal(testUserNestJSON, resp2)
-	assert.NoError(t, err)
-	assert.NotNil(t, resp2.Data)
-	assert.Equal(t, "John", resp2.Data.Name)
+	t.Run("Struct", func(t *testing.T) {
+		resp := struct {
+			Code int    `jsonp:"code"`
+			Msg  string `jsonp:"msg"`
+			Data user   `jsonp:"data"`
+		}{}
+		err := Unmarshal(testUserNestJSON, &resp)
+		assert.NoError(t, err)
+		assert.NotNil(t, resp.Data)
+		assert.Equal(t, "John", resp.Data.Name)
+	})
+
+	t.Run("Pointer of struct", func(t *testing.T) {
+		resp := struct {
+			Code int    `jsonp:"code"`
+			Msg  string `jsonp:"msg"`
+			Data *user  `jsonp:"data"`
+		}{}
+		err := Unmarshal(testUserNestJSON, &resp)
+		assert.NoError(t, err)
+		assert.NotNil(t, resp.Data)
+		assert.Equal(t, "John", resp.Data.Name)
+	})
 }
 
 func TestUnmarshalJSONArray(t *testing.T) {
 	type user struct {
 		Name string `jsonp:"name"`
 	}
-	type response struct {
-		Code  int    `jsonp:"code"`
-		Msg   string `jsonp:"msg"`
-		Users []user `jsonp:"users"`
-	}
+	t.Run("Slice", func(t *testing.T) {
+		resp := struct {
+			Code  int    `jsonp:"code"`
+			Msg   string `jsonp:"msg"`
+			Users []user `jsonp:"users"`
+		}{}
+		err := Unmarshal(testUserArrayJSON, &resp)
+		assert.NoError(t, err)
+		assert.NotNil(t, resp.Users)
+		assert.Len(t, resp.Users, 2)
+	})
 
-	resp := &response{}
-	err := Unmarshal(testUserArrayJSON, resp)
-	assert.NoError(t, err)
-	assert.NotNil(t, resp.Users)
-	assert.Len(t, resp.Users, 2)
+	t.Run("Pointer of slice", func(t *testing.T) {
+		resp := struct {
+			Users *[]user `jsonp:"users"`
+		}{}
+		err := Unmarshal(testUserArrayJSON, &resp)
+		assert.NoError(t, err)
+		assert.NotNil(t, resp.Users)
+		assert.Len(t, *resp.Users, 2)
+	})
 }

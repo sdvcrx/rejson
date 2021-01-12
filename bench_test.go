@@ -67,6 +67,5 @@ func BenchmarkUnmarshalEncodingJSON(b *testing.B) {
 		w.Name = bs.Widget.Window.Name
 		w.HOffset = bs.Widget.Image.HOffset
 		w.OnMouseUp = bs.Widget.Text.OnMouseUp
-
 	}
 }
