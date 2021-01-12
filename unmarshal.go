@@ -123,7 +123,7 @@ func setFieldArray(field reflect.Value, val gjson.Result) {
 	for i := 0; i < arrLength; i++ {
 		v := arr[i]
 
-		setFieldObject(arrVal.Index(i), v)
+		setField(arrVal.Index(i), v)
 	}
 	if field.Kind() == reflect.Ptr {
 		// Users *[]user `jsonp:"users"`

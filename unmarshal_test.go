@@ -94,6 +94,28 @@ func TestUnmarshalJSONArray(t *testing.T) {
 		assert.Len(t, *resp.Users, 2)
 	})
 
+	t.Run("Slice of number", func(t *testing.T) {
+		resp := struct {
+			Nums []int `jsonp:"nums"`
+		}{}
+
+		assert.NoError(t, Unmarshal(`{"nums":[1,2,3]}`, &resp))
+		assert.Len(t, resp.Nums, 3)
+		for i := 0; i < 3; i++ {
+			assert.Equal(t, i+1, resp.Nums[i])
+		}
+	})
+
+	t.Run("Slice of string", func(t *testing.T) {
+		resp := struct {
+			Names []string `jsonp:"names"`
+		}{}
+
+		assert.NoError(t, Unmarshal(`{"names":["a","b","c"]}`, &resp))
+		assert.Len(t, resp.Names, 3)
+	})
+}
+
 func TestUnmarshalNumber(t *testing.T) {
 	t.Run("Float64", func(t *testing.T) {
 		resp := struct {
