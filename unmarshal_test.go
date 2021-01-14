@@ -14,13 +14,13 @@ const (
 )
 
 type user struct {
-	FirstName string `jsonp:"first_name"`
-	LastName  string `jsonp:"last_name"`
-	FullName  string `jsonp:"func:ParseFullName"`
-	Age       int    `jsonp:"age"`
-	Married   bool   `jsonp:"married"`
-	Graduated bool   `jsonp:"graduated"`
-	Empty     string `jsonp:"-"`
+	FirstName string `rejson:"first_name"`
+	LastName  string `rejson:"last_name"`
+	FullName  string `rejson:"func:ParseFullName"`
+	Age       int    `rejson:"age"`
+	Married   bool   `rejson:"married"`
+	Graduated bool   `rejson:"graduated"`
+	Empty     string `rejson:"-"`
 }
 
 func (usr *user) ParseFullName(jsonReader *gjson.Result) {
@@ -40,14 +40,14 @@ func TestUnmarshalJSONSimple(t *testing.T) {
 
 func TestUnmarshalJSONNest(t *testing.T) {
 	type user struct {
-		Name string `jsonp:"name"`
+		Name string `rejson:"name"`
 	}
 
 	t.Run("Struct", func(t *testing.T) {
 		resp := struct {
-			Code int    `jsonp:"code"`
-			Msg  string `jsonp:"msg"`
-			Data user   `jsonp:"data"`
+			Code int    `rejson:"code"`
+			Msg  string `rejson:"msg"`
+			Data user   `rejson:"data"`
 		}{}
 		err := Unmarshal(testUserNestJSON, &resp)
 		assert.NoError(t, err)
@@ -57,9 +57,9 @@ func TestUnmarshalJSONNest(t *testing.T) {
 
 	t.Run("Pointer of struct", func(t *testing.T) {
 		resp := struct {
-			Code int    `jsonp:"code"`
-			Msg  string `jsonp:"msg"`
-			Data *user  `jsonp:"data"`
+			Code int    `rejson:"code"`
+			Msg  string `rejson:"msg"`
+			Data *user  `rejson:"data"`
 		}{}
 		err := Unmarshal(testUserNestJSON, &resp)
 		assert.NoError(t, err)
@@ -70,13 +70,13 @@ func TestUnmarshalJSONNest(t *testing.T) {
 
 func TestUnmarshalJSONArray(t *testing.T) {
 	type user struct {
-		Name string `jsonp:"name"`
+		Name string `rejson:"name"`
 	}
 	t.Run("Slice", func(t *testing.T) {
 		resp := struct {
-			Code  int    `jsonp:"code"`
-			Msg   string `jsonp:"msg"`
-			Users []user `jsonp:"users"`
+			Code  int    `rejson:"code"`
+			Msg   string `rejson:"msg"`
+			Users []user `rejson:"users"`
 		}{}
 		err := Unmarshal(testUserArrayJSON, &resp)
 		assert.NoError(t, err)
@@ -86,7 +86,7 @@ func TestUnmarshalJSONArray(t *testing.T) {
 
 	t.Run("Pointer of slice", func(t *testing.T) {
 		resp := struct {
-			Users *[]user `jsonp:"users"`
+			Users *[]user `rejson:"users"`
 		}{}
 		err := Unmarshal(testUserArrayJSON, &resp)
 		assert.NoError(t, err)
@@ -96,7 +96,7 @@ func TestUnmarshalJSONArray(t *testing.T) {
 
 	t.Run("Slice of number", func(t *testing.T) {
 		resp := struct {
-			Nums []int `jsonp:"nums"`
+			Nums []int `rejson:"nums"`
 		}{}
 
 		assert.NoError(t, Unmarshal(`{"nums":[1,2,3]}`, &resp))
@@ -108,7 +108,7 @@ func TestUnmarshalJSONArray(t *testing.T) {
 
 	t.Run("Slice of string", func(t *testing.T) {
 		resp := struct {
-			Names []string `jsonp:"names"`
+			Names []string `rejson:"names"`
 		}{}
 
 		assert.NoError(t, Unmarshal(`{"names":["a","b","c"]}`, &resp))
@@ -119,7 +119,7 @@ func TestUnmarshalJSONArray(t *testing.T) {
 func TestUnmarshalNumber(t *testing.T) {
 	t.Run("Float64", func(t *testing.T) {
 		resp := struct {
-			Money float64 `jsonp:"money"`
+			Money float64 `rejson:"money"`
 		}{}
 
 		assert.NoError(t, Unmarshal(`{"money":3.2}`, &resp))
@@ -128,7 +128,7 @@ func TestUnmarshalNumber(t *testing.T) {
 
 	t.Run("Float32", func(t *testing.T) {
 		resp := struct {
-			Money float32 `jsonp:"money"`
+			Money float32 `rejson:"money"`
 		}{}
 
 		assert.NoError(t, Unmarshal(`{"money":3.2}`, &resp))
@@ -137,7 +137,7 @@ func TestUnmarshalNumber(t *testing.T) {
 
 	t.Run("Int32", func(t *testing.T) {
 		resp := struct {
-			Money int32 `jsonp:"money"`
+			Money int32 `rejson:"money"`
 		}{}
 
 		assert.NoError(t, Unmarshal(`{"money":3}`, &resp))

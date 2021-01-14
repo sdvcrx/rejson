@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	tagName = "jsonp"
+	tagName = "rejson"
 )
 
 const (

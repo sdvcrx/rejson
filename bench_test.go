@@ -12,9 +12,9 @@ const (
 )
 
 type benchWidget struct {
-	Name      string `jsonp:"widget.window.name"`
-	HOffset   int    `jsonp:"widget.image.hOffset"`
-	OnMouseUp string `jsonp:"widget.text.onMouseUp"`
+	Name      string `rejson:"widget.window.name"`
+	HOffset   int    `rejson:"widget.image.hOffset"`
+	OnMouseUp string `rejson:"widget.text.onMouseUp"`
 }
 
 type benchStruct struct {
