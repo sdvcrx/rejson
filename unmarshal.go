@@ -130,7 +130,9 @@ func setFieldArray(field reflect.Value, val gjson.Result) error {
 	for i := 0; i < arrLength; i++ {
 		v := arr[i]
 
-		setField(arrVal.Index(i), v)
+		if err := setField(arrVal.Index(i), v); err != nil {
+			return err
+		}
 	}
 	if field.Kind() == reflect.Ptr {
 		// Users *[]user `rejson:"users"`
