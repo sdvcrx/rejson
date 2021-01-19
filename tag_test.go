@@ -52,8 +52,7 @@ func TestParseTag(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseTag(tt.args)
-			assert.NoError(t, err)
+			got := parseTag(tt.args)
 			assert.Equal(t, tt.want.Type, got.Type)
 			assert.Equal(t, tt.want.Value, got.Value)
 		})

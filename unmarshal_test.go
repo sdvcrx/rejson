@@ -1,7 +1,10 @@
 package rejson
 
 import (
+	"reflect"
 	"testing"
+
+	"errors"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
@@ -116,6 +119,14 @@ func TestUnmarshalJSONArray(t *testing.T) {
 	})
 }
 
+func TestUnmarshalUnknownTag(t *testing.T) {
+	d := struct {
+		Nums []int `rejson:"test:test"`
+	}{}
+	err := Unmarshal(`{}`, &d)
+	assert.True(t, errors.Is(err, ErrUnknownTag))
+}
+
 func TestUnmarshalNumber(t *testing.T) {
 	t.Run("Float64", func(t *testing.T) {
 		resp := struct {
@@ -142,5 +153,28 @@ func TestUnmarshalNumber(t *testing.T) {
 
 		assert.NoError(t, Unmarshal(`{"money":3}`, &resp))
 		assert.Equal(t, int32(3), resp.Money)
+	})
+}
+
+func TestUnmarshalResultError(t *testing.T) {
+	jsonStr := gjson.Parse("\"123\"")
+	var u *user
+	err := unmarshalResult(jsonStr, u)
+	assert.Error(t, err)
+}
+
+func TestSetField(t *testing.T) {
+	jsonStr := gjson.Parse("\"123\"")
+
+	t.Run("Expect return ErrFieldCannotSet", func(t *testing.T) {
+		var s string
+		err := setField(reflect.ValueOf(s), jsonStr)
+		assert.True(t, errors.Is(err, ErrFieldCannotSet))
+	})
+
+	t.Run("Expect return ErrUnknownFieldType", func(t *testing.T) {
+		var v bool
+		err := setFieldStringOrNumber(reflect.ValueOf(v), jsonStr)
+		assert.True(t, errors.Is(err, ErrUnknownFieldType))
 	})
 }

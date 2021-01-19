@@ -1,6 +1,7 @@
 package rejson
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -13,6 +14,10 @@ const (
 	tagTypeIgnore = "-"
 	tagTypeFunc   = "func"
 	tagTypePath   = "path"
+)
+
+var (
+	ErrUnknownTag = errors.New("Unknown tag")
 )
 
 type tag struct {
@@ -32,19 +37,19 @@ func splitTag(s string) tag {
 	}
 }
 
-func parseTag(t string) (tag, error) {
+func parseTag(t string) tag {
 	v := strings.TrimSpace(t)
 
 	switch {
 	case v == tagTypeEmpty:
-		return tag{Type: tagTypeEmpty}, nil
+		return tag{Type: tagTypeEmpty}
 	case v == tagTypeIgnore:
-		return tag{Type: tagTypeIgnore}, nil
+		return tag{Type: tagTypeIgnore}
 	default:
 		tg := splitTag(v)
 		if tg.Type == "" {
 			tg.Type = tagTypePath
 		}
-		return tg, nil
+		return tg
 	}
 }
