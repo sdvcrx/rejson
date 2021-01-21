@@ -6,18 +6,41 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/sdvcrx/rejson)](https://goreportcard.com/report/github.com/sdvcrx/rejson)
 [![codecov](https://codecov.io/gh/sdvcrx/rejson/branch/master/graph/badge.svg?token=WJVJ0WRX3C)](https://codecov.io/gh/sdvcrx/rejson)
 
+## Install
+
+Run `go get`:
+
+```sh
+go get -u github.com/sdvcrx/rejson
+```
+
 ## Usage
 
 ```go
-jsonString := `{"code":0,"msg": null,"data":{"name":"John"}}`
+package main
+
+import (
+	"log"
+
+	"github.com/sdvcrx/rejson"
+)
 
 type User struct {
 	Name string `rejson:"data.name"`
 }
 
-u := User{}
-rejson.Unmarshal(jsonString, &u)
-// u => User{Name:John}
+func main() {
+	jsonString := `{
+		"code":0,
+		"msg": null,
+		"data":{"name":"John"}
+	}`
+
+	u := User{}
+	rejson.Unmarshal(jsonString, &u)
+	log.Printf("%#v", u)
+	// u => User{Name:John}
+}
 ```
 
 ## Performance

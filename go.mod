@@ -1,4 +1,4 @@
-module rejson
+module github.com/sdvcrx/rejson
 
 go 1.15
 
