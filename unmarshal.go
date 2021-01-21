@@ -176,6 +176,7 @@ func (u *unmarshal) Unmarshal(v interface{}) error {
 	return unmarshalResult(u.r, v)
 }
 
+// Unmarshal parses the JSON string and stores the result in the value pointed to by v.
 func Unmarshal(jsonString string, v interface{}) error {
 	u := newUnmarshal(jsonString)
 	return u.Unmarshal(v)
