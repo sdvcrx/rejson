@@ -5,6 +5,7 @@
 [![Github Action](https://github.com/sdvcrx/rejson/workflows/Go/badge.svg)](https://github.com/sdvcrx/rejson/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sdvcrx/rejson)](https://goreportcard.com/report/github.com/sdvcrx/rejson)
 [![codecov](https://codecov.io/gh/sdvcrx/rejson/branch/master/graph/badge.svg?token=WJVJ0WRX3C)](https://codecov.io/gh/sdvcrx/rejson)
+[![Go.dev](https://pkg.go.dev/badge/github.com/sdvcrx/rejson)](https://pkg.go.dev/github.com/sdvcrx/rejson)
 
 ## Install
 
